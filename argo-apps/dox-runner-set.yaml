@@ -23,7 +23,6 @@ spec:
           metadata: {}  # ✅ Required by Helm chart schema
           spec:
             securityContext:
-              runAsGroup: 1000
               fsGroup: 1000  # ✅ Ensures mounted volumes are not root-owned        
             containers:
               - name: runner
