@@ -1,10 +1,14 @@
-# Namespace
+# ---------------------
+# Namespace for NFS
+# ---------------------
 apiVersion: v1
 kind: Namespace
 metadata:
   name: dox-nfs
 ---
-# NFS Server (in-cluster, using emptyDir)
+# ---------------------
+# NFS Server (emptyDir-based)
+# ---------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,7 +41,9 @@ spec:
         - name: nfs-volume
           emptyDir: {}
 ---
+# ---------------------
 # NFS Server Service
+# ---------------------
 apiVersion: v1
 kind: Service
 metadata:
@@ -51,7 +57,9 @@ spec:
       port: 2049
       targetPort: 2049
 ---
-# RBAC for the Provisioner
+# ---------------------
+# RBAC for Provisioner
+# ---------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -89,7 +97,9 @@ roleRef:
   name: nfs-client-provisioner-role
   apiGroup: rbac.authorization.k8s.io
 ---
-# NFS Subdir External Provisioner
+# ---------------------
+# Official NFS Subdir External Provisioner (multi-arch)
+# ---------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -107,7 +117,7 @@ spec:
     spec:
       serviceAccountName: nfs-client-provisioner
       containers:
-        - name: nfs-client-provisioner
+        - name: nfs-subdir-external-provisioner
           image: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
           volumeMounts:
             - name: nfs-client-root
@@ -125,7 +135,9 @@ spec:
             server: nfs-server.dox-nfs.svc.cluster.local
             path: /
 ---
-# StorageClass (RWX)
+# ---------------------
+# StorageClass
+# ---------------------
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
