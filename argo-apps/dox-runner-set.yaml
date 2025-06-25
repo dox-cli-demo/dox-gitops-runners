@@ -21,6 +21,10 @@ spec:
           name: arc-gha-rs-controller
         template:
           spec:
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
+              fsGroup: 1000          
             containers:
               - name: runner
                 image: ghcr.io/actions/actions-runner:2.325.0
@@ -37,10 +41,6 @@ spec:
                     value: /home/runner/dox_resources
                   - name: PATH
                     value: /home/runner/.dox/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-                securityContext:
-                  runAsUser: 1000
-                  runAsGroup: 1000
-                  fsGroup: 1000
                 volumeMounts:
                   - name: dind-sock
                     mountPath: /var/run
