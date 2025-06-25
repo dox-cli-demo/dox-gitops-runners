@@ -30,7 +30,7 @@ spec:
                     echo "Cloning dox-devops-base repo..." && git clone --depth=1 https://github.com/dox-cli-demo/dox-devops-base.git /home/runner/dox_customize && \
                     echo "Setting ownership..." && \
                     chown -R 1001:1001 /home/runner/dox_resources && \
-                    chown -R 1001:1001 /home/runner/dox_customize && \
+                    chown -R 1001:1001 /home/runner/dox_customize
                 volumeMounts:
                   - name: dox-resources
                     mountPath: /home/runner/dox_resources
