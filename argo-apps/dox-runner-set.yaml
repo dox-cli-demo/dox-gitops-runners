@@ -26,9 +26,7 @@ spec:
                 image: ghcr.io/actions/actions-runner:2.325.0
                 command: ["/bin/bash", "-c"]
                 args:
-                  - |
-                    curl -s -L -o install.sh https://github.com/dopxlab/dox-cli/releases/latest/download/install.sh &&  bash install.sh && \
-                    /home/runner/run.sh
+                  - curl -s -L -o install.sh https://github.com/dopxlab/dox-cli/releases/latest/download/install.sh &&  bash install.sh && /home/runner/run.sh
                 envFrom:
                   - secretRef:
                       name: dox-runner-secret
