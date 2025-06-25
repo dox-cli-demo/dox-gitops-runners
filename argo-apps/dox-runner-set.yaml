@@ -23,13 +23,18 @@ spec:
           spec:   
             initContainers:
               - name: fix-perms
-                image: busybox
+                image: alpine/git
                 command: ["sh", "-c"]
                 args:
-                  - '[ -z "$(ls -A /home/runner/dox_resources 2>/dev/null)" ] && chmod -R 777 /home/runner/dox_resources || echo "Directory not empty, skipping chmod"'
+                  - |
+                    echo "Cloning dox-devops-base repo..." && \
+                    git clone --depth=1 https://github.com/dox-cli-demo/dox-devops-base.git /home/runner/dox_customize && \
+                    [ -z "$(ls -A /home/runner/dox_resources 2>/dev/null)" ] && chmod -R 777 /home/runner/dox_resources || echo "dox_resources not empty, skipping chmod"
                 volumeMounts:
                   - name: dox-resources
                     mountPath: /home/runner/dox_resources
+                  - name: dox-customize
+                    mountPath: /home/runner/dox_customize
             containers:
               - name: runner
                 image: ghcr.io/actions/actions-runner:2.325.0
@@ -53,6 +58,8 @@ spec:
                     mountPath: /var/run
                   - name: dox-resources
                     mountPath: /home/runner/dox_resources
+                  - name: dox-customize
+                    mountPath: /home/runner/dox_customize  
               - name: dind
                 image: docker:dind
                 args:
@@ -69,6 +76,8 @@ spec:
                     mountPath: /var/run
             volumes:
               - name: dind-sock
+                emptyDir: {}
+              - name: dox-customize
                 emptyDir: {}
               - name: dox-resources
                 persistentVolumeClaim:
