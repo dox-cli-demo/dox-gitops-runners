@@ -14,7 +14,6 @@ spec:
       values: |
         githubConfigUrl: https://github.com/dox-cli-demo
         githubConfigSecret: dox-runner-secret
-        githubConfigSecretKey: GITOPS_PAT
         runnerGroup: dox-runners
         minRunners: 1
         controllerServiceAccount:
