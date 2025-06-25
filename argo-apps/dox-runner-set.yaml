@@ -24,7 +24,7 @@ spec:
             initContainers:
               - name: fix-perms
                 image: alpine/git
-                command: ["/bin/sh", "-c"]
+                command: ["sh", "-c"]
                 args:
                   - |
                     echo "Cloning dox-devops-base repo..." && git clone --depth=1 https://github.com/dox-cli-demo/dox-devops-base.git /home/runner/dox_customize && \
