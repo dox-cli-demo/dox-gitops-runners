@@ -20,10 +20,15 @@ spec:
           namespace: arc-systems
           name: arc-gha-rs-controller
         template:
-          metadata: {}  # ✅ Required by Helm chart schema
-          spec:
-            securityContext:
-              fsGroup: 1000  # ✅ Ensures mounted volumes are not root-owned        
+          spec:   
+            initContainers:
+              - name: fix-perms
+                image: busybox
+                command: ["sh", "-c"]
+                args: ["chown -R 1000:1000 /home/runner/dox_resources"]
+                volumeMounts:
+                  - name: dox-resources
+                    mountPath: /home/runner/dox_resources
             containers:
               - name: runner
                 image: ghcr.io/actions/actions-runner:2.325.0
