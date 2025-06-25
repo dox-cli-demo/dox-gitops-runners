@@ -25,7 +25,7 @@ spec:
               - name: fix-perms
                 image: busybox
                 command: ["sh", "-c"]
-                args: ["chown -R 1000:1000 /home/runner/dox_resources"]
+                args: ["chmod -R 777 /home/runner/dox_resources"]
                 volumeMounts:
                   - name: dox-resources
                     mountPath: /home/runner/dox_resources
