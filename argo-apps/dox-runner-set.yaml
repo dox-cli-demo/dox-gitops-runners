@@ -23,13 +23,13 @@ spec:
           spec:   
             initContainers:
               - name: fix-perms
-                image: alpine/git
-                command: ["sh", "-c"]
+                image: ghcr.io/actions/actions-runner:2.325.0
+                command: ["/bin/bash", "-c"]
                 args:
                   - |
-                    echo "Cloning dox-devops-base repo..." && \
-                    git clone --depth=1 https://github.com/dox-cli-demo/dox-devops-base.git /home/runner/dox_customize && \
-                    [ -z "$(ls -A /home/runner/dox_resources 2>/dev/null)" ] && chown -R 1000:1000 /home/runner/dox_resources || echo "dox_resources not empty, skipping chown"
+                    echo "Cloning dox-devops-base repo..." && git clone --depth=1 https://github.com/dox-cli-demo/dox-devops-base.git /home/runner/dox_customize && \
+                    echo "Setting ownership..." && chown -R 1001:1001 /home/runner/dox_resources && chown -R 1001:1001 /home/runner/dox_customize && \
+                    echo "Downloading dox installation script..." && curl -s -L -o /home/runner/dox_customize/install.sh https://github.com/dopxlab/dox-cli/releases/latest/download/install.sh
                 volumeMounts:
                   - name: dox-resources
                     mountPath: /home/runner/dox_resources
@@ -40,7 +40,7 @@ spec:
                 image: ghcr.io/actions/actions-runner:2.325.0
                 command: ["/bin/bash", "-c"]
                 args:
-                  - curl -s -L -o install.sh https://github.com/dopxlab/dox-cli/releases/latest/download/install.sh &&  bash install.sh && /home/runner/run.sh
+                  - bash /home/runner/dox_customize/install.sh && /home/runner/run.sh
                 envFrom:
                   - secretRef:
                       name: dox-runner-secret
