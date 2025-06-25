@@ -25,7 +25,8 @@ spec:
               - name: fix-perms
                 image: busybox
                 command: ["sh", "-c"]
-                args: ["chmod -R 777 /home/runner/dox_resources"]
+                args:
+                  - '[ -z "$(ls -A /home/runner/dox_resources 2>/dev/null)" ] && chmod -R 777 /home/runner/dox_resources || echo "Directory not empty, skipping chmod"'
                 volumeMounts:
                   - name: dox-resources
                     mountPath: /home/runner/dox_resources
