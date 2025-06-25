@@ -129,6 +129,8 @@ spec:
               value: nfs-server.dox-nfs.svc.cluster.local
             - name: NFS_PATH
               value: /
+            - name: NFS_OPTIONS
+              value: "nolock"              
       volumes:
         - name: nfs-client-root
           nfs:
