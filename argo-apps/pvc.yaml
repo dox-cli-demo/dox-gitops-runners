@@ -10,3 +10,16 @@ spec:
     requests:
       storage: 5Gi
   storageClassName: dox-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dox-docker-pvc
+  namespace: dox-runners
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: dox-storage
