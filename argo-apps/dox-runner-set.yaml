@@ -14,7 +14,7 @@ spec:
       values: |
         githubConfigUrl: https://github.com/dox-cli-demo
         githubConfigSecret: dox-runner-secret
-        runnerGroup: dox-runners
+        runnerGroup: Default
         minRunners: 1
         controllerServiceAccount:
           namespace: arc-systems
