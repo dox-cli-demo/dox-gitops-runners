@@ -14,6 +14,7 @@ spec:
       values: |
         githubConfigUrl: https://github.com/dox-cli-demo
         githubConfigSecret: dox-runner-secret
+        githubConfigSecretKey: GITOPS_PAT
         runnerGroup: dox-runners
         minRunners: 1
         controllerServiceAccount:
@@ -25,6 +26,8 @@ spec:
               - name: runner
                 image: ghcr.io/actions/actions-runner:2.325.0
                 command: ["/home/runner/run.sh"]
+                envFrom:
+                  secretRef:
                 env:
                   - name: DOCKER_HOST
                     value: unix:///var/run/docker.sock
