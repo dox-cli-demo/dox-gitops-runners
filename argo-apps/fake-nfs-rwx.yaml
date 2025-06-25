@@ -20,3 +20,27 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: /tmp/dox-resources
+---
+---
+# Storage Class 
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: dox-docker-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: Immediate
+---
+# Static Persistent Volume (acts like NFS)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: dox-docker-static-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: dox-docker-storage
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /tmp/dox-docker-resources
