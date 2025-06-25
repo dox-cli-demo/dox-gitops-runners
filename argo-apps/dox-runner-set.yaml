@@ -29,7 +29,7 @@ spec:
                   - |
                     echo "Cloning dox-devops-base repo..." && \
                     git clone --depth=1 https://github.com/dox-cli-demo/dox-devops-base.git /home/runner/dox_customize && \
-                    [ -z "$(ls -A /home/runner/dox_resources 2>/dev/null)" ] && chmod -R 777 /home/runner/dox_resources || echo "dox_resources not empty, skipping chmod"
+                    [ -z "$(ls -A /home/runner/dox_resources 2>/dev/null)" ] && chown -R 1000:1000 /home/runner/dox_resources || echo "dox_resources not empty, skipping chown"
                 volumeMounts:
                   - name: dox-resources
                     mountPath: /home/runner/dox_resources
