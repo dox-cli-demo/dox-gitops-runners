@@ -15,7 +15,7 @@ spec:
         githubConfigUrl: https://github.com/dox-cli-demo
         githubConfigSecret: dox-runner-secret
         runnerGroup: dox-runners
-        minRunners: 2
+        minRunners: 0
         controllerServiceAccount:
           namespace: arc-systems
           name: arc-gha-rs-controller
