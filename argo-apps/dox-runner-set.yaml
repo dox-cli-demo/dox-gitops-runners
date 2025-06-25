@@ -52,6 +52,8 @@ spec:
                     value: /home/runner/dox_resources
                   - name: DOX_USER_BIN
                     value: /home/runner/.dox/bin
+                  - name: DOX_CUSTOM_DIR
+                    value: /home/runner/dox_customize
                   - name: PATH
                     value: /home/runner/.dox/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
                 volumeMounts:
