@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: dox-resources-pvc
+  name: dox-docker-pvc
   namespace: dox-runners
 spec:
   accessModes:

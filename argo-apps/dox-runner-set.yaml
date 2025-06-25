@@ -87,8 +87,6 @@ spec:
                 volumeMounts:
                   - name: dind-sock
                     mountPath: /var/run
-                  - name: docker-cache
-                    mountPath: /var/lib/docker
             volumes:
               - name: dind-sock
                 emptyDir: {}
@@ -96,10 +94,7 @@ spec:
                 emptyDir: {}
               - name: dox-resources
                 persistentVolumeClaim:
-                  claimName: dox-resources-pvc
-              - name: docker-cache
-                persistentVolumeClaim:
-                  claimName: dox-docker-pvc                               
+                  claimName: dox-resources-pvc                
   destination:
     server: https://kubernetes.default.svc
     namespace: dox-runners
