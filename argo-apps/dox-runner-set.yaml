@@ -37,6 +37,10 @@ spec:
                     value: /home/runner/dox_resources
                   - name: PATH
                     value: /home/runner/.dox/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+                securityContext:
+                  runAsUser: 1000
+                  runAsGroup: 1000
+                  fsGroup: 1000
                 volumeMounts:
                   - name: dind-sock
                     mountPath: /var/run
