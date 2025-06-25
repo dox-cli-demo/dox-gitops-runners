@@ -59,10 +59,20 @@ spec:
                 volumeMounts:
                   - name: dind-sock
                     mountPath: /var/run
+                  - name: dox-customize
+                    mountPath: /home/runner/dox_customize
                   - name: dox-resources
                     mountPath: /home/runner/dox_resources
-                  - name: dox-customize
-                    mountPath: /home/runner/dox_customize  
+                    subPath: resources
+                  - name: dox-resources
+                    mountPath: /home/runner/.m2
+                    subPath: m2
+                  - name: dox-resources
+                    mountPath: /home/runner/.trivy
+                    subPath: trivy  
+                  - name: dox-resources
+                    mountPath: /home/runner/.cache
+                    subPath: cache                     
               - name: dind
                 image: docker:dind
                 args:
