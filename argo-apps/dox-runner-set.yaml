@@ -25,9 +25,6 @@ spec:
               - name: runner
                 image: ghcr.io/actions/actions-runner:2.325.0
                 command: ["/home/runner/run.sh"]
-                envFrom:
-                  - secretRef:
-                      name: dox-runner-secret
                 env:
                   - name: DOCKER_HOST
                     value: unix:///var/run/docker.sock
@@ -35,6 +32,26 @@ spec:
                     value: /home/runner/dox_resources
                   - name: PATH
                     value: /home/runner/.dox/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+                  - name: DEBUG_MODE
+                    value: "true"
+                  - name: DOCKER_IMAGE_PUSH_PREFIX
+                    value: devstackhub
+                  - name: GITOPS_REPO
+                    value: github.com/dox-cli-demo/dox-gitops-argocd.git
+                  - name: HELM_OCI_URL
+                    value: oci://docker.io/devstackhub
+                  - name: OCI_REG_USER
+                    value: devstackhub
+                  - name: OCI_REG_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: dox-runner-secret
+                        key: oci_reg_password
+                  - name: GITOPS_PAT
+                    valueFrom:
+                      secretKeyRef:
+                        name: dox-runner-secret
+                        key: github_token
                 volumeMounts:
                   - name: dind-sock
                     mountPath: /var/run
