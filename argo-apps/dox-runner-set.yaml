@@ -20,11 +20,7 @@ spec:
           namespace: arc-systems
           name: arc-gha-rs-controller
         template:
-          spec:
-            securityContext:
-              runAsUser: 1000
-              runAsGroup: 1000
-              fsGroup: 1000          
+          spec:        
             containers:
               - name: runner
                 image: ghcr.io/actions/actions-runner:2.325.0
