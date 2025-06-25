@@ -87,7 +87,7 @@ spec:
                 volumeMounts:
                   - name: dind-sock
                     mountPath: /var/run
-                  - name: docker-cache
+                  - name: dox-resources
                     mountPath: /var/lib/docker
                     subPath: docker-cache
             volumes:
