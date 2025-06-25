@@ -12,7 +12,7 @@ spec:
     helm:
       releaseName: dox-runner-set
       values: |
-        githubConfigUrl: https://github.com/dopxlab
+        githubConfigUrl: https://github.com/dox-cli-demo
         githubConfigSecret: dox-runner-secret
         minRunners: 2
         controllerServiceAccount:
