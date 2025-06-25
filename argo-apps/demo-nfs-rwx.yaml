@@ -1,14 +1,15 @@
-# ---------------------
-# Namespace for NFS
-# ---------------------
+---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: dox-nfs
 ---
-# ---------------------
-# NFS Server (emptyDir-based)
-# ---------------------
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dox-runners
+---
+# NFS Server (in-cluster)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,6 +33,12 @@ spec:
           env:
             - name: SHARED_DIRECTORY
               value: /nfsshare
+            - name: PERMITTED
+              value: "*"
+            - name: READ_ONLY
+              value: "false"
+            - name: SYNC
+              value: "async"
           ports:
             - containerPort: 2049
           volumeMounts:
@@ -41,9 +48,6 @@ spec:
         - name: nfs-volume
           emptyDir: {}
 ---
-# ---------------------
-# NFS Server Service
-# ---------------------
 apiVersion: v1
 kind: Service
 metadata:
@@ -57,9 +61,7 @@ spec:
       port: 2049
       targetPort: 2049
 ---
-# ---------------------
-# RBAC for Provisioner
-# ---------------------
+# ServiceAccount and RBAC for provisioner
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -97,9 +99,7 @@ roleRef:
   name: nfs-client-provisioner-role
   apiGroup: rbac.authorization.k8s.io
 ---
-# ---------------------
-# Official NFS Subdir External Provisioner (multi-arch)
-# ---------------------
+# NFS Subdir External Provisioner (ARM-compatible)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -115,10 +115,13 @@ spec:
       labels:
         app: nfs-subdir-external-provisioner
     spec:
+      hostNetwork: true
       serviceAccountName: nfs-client-provisioner
       containers:
         - name: nfs-subdir-external-provisioner
           image: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
+          securityContext:
+            privileged: true
           volumeMounts:
             - name: nfs-client-root
               mountPath: /persistentvolumes
@@ -130,16 +133,14 @@ spec:
             - name: NFS_PATH
               value: /
             - name: NFS_OPTIONS
-              value: "nolock"              
+              value: "nolock"
       volumes:
         - name: nfs-client-root
           nfs:
             server: nfs-server.dox-nfs.svc.cluster.local
             path: /
 ---
-# ---------------------
-# StorageClass
-# ---------------------
+# StorageClass using NFS Provisioner
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
