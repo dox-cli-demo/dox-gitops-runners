@@ -5,8 +5,8 @@ metadata:
   namespace: dox-runners
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
-      storage: 10Gi
-  storageClassName: standard
+      storage: 5Gi
+  storageClassName: dox-storage
