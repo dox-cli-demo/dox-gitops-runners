@@ -20,6 +20,7 @@ spec:
           namespace: arc-systems
           name: arc-gha-rs-controller
         template:
+          metadata: {}
           spec:      
             securityContext:
               fsGroup: 1000         
