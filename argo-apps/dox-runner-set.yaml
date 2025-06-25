@@ -1,0 +1,68 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dox-runner-set
+  namespace: argocd  # Adjust to match your ArgoCD installation namespace
+spec:
+  project: default
+  source:
+    repoURL: ghcr.io/actions/actions-runner-controller-charts
+    chart: gha-runner-scale-set
+    targetRevision: 0.11.0
+    helm:
+      releaseName: dox-runner-set
+      values: |
+        githubConfigUrl: https://github.com/dopxlab
+        githubConfigSecret: dox-runner-secret
+        minRunners: 2
+        controllerServiceAccount:
+          namespace: arc-systems
+          name: arc-gha-rs-controller
+        template:
+          spec:
+            containers:
+              - name: runner
+                image: ghcr.io/actions/actions-runner:2.324.0
+                command: ["/home/runner/run.sh"]
+                env:
+                  - name: DOCKER_HOST
+                    value: unix:///var/run/docker.sock
+                  - name: DOX_RESOURCES_DIR
+                    value: /home/runner/dox_resources
+                  - name: PATH
+                    value: /home/runner/.dox/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+                volumeMounts:
+                  - name: dind-sock
+                    mountPath: /var/run
+                  - name: dox-resources
+                    mountPath: /home/runner/dox_resources
+              - name: dind
+                image: docker:dind
+                args:
+                  - dockerd
+                  - --host=unix:///var/run/docker.sock
+                  - --group=$(DOCKER_GROUP_GID)
+                env:
+                  - name: DOCKER_GROUP_GID
+                    value: "123"
+                securityContext:
+                  privileged: true
+                volumeMounts:
+                  - name: dind-sock
+                    mountPath: /var/run
+            volumes:
+              - name: dind-sock
+                emptyDir: {}
+              - name: dox-resources
+                persistentVolumeClaim:
+                  claimName: dox-resources-pvc                
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dox-runners
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    automated:
+      prune: true
+      selfHeal: true
