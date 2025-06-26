@@ -82,6 +82,8 @@ spec:
                 env:
                   - name: DOCKER_GROUP_GID
                     value: "123"
+                  - name: DOCKER_BUILDKIT
+                    value: "1"
                 securityContext:
                   privileged: true
                 volumeMounts:
