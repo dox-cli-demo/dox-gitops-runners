@@ -76,6 +76,7 @@ spec:
                     subPath: cache
                   - name: dox-resources
                     mountPath: /var/lib/buildkit
+                    subPath: buildkit
 
               - name: buildkitd
                 image: moby/buildkit:latest
@@ -85,6 +86,7 @@ spec:
                 volumeMounts:
                   - name: dox-resources
                     mountPath: /var/lib/buildkit
+                    subPath: buildkit
 
             volumes:
               - name: dox-customize
