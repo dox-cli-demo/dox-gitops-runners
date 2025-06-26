@@ -81,8 +81,6 @@ spec:
               - name: buildkitd
                 image: moby/buildkit:latest
                 args: ["--addr", "tcp://0.0.0.0:1234"]
-                ports:
-                  - containerPort: 1234
                 volumeMounts:
                   - name: dox-resources
                     mountPath: /var/lib/buildkit
