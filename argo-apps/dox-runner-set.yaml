@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: dox-runner-set
-  namespace: argocd
+  namespace: argocd  # Adjust to match your ArgoCD installation namespace
 spec:
   project: default
   source:
@@ -20,7 +20,7 @@ spec:
           namespace: arc-systems
           name: arc-gha-rs-controller
         template:
-          spec:
+          spec:   
             initContainers:
               - name: fix-perms
                 image: alpine/git
@@ -36,7 +36,6 @@ spec:
                     mountPath: /home/runner/dox_resources
                   - name: dox-customize
                     mountPath: /home/runner/dox_customize
-
             containers:
               - name: runner
                 image: ghcr.io/actions/actions-runner:2.325.0
@@ -47,6 +46,10 @@ spec:
                   - secretRef:
                       name: dox-runner-secret
                 env:
+                  - name: DOCKER_HOST
+                    value: unix:///var/run/docker.sock
+                  - name: DOCKER_BUILDKIT
+                    value: "1"
                   - name: DOX_RESOURCES_DIR
                     value: /home/runner/dox_resources
                   - name: DOX_USER_BIN
@@ -55,11 +58,9 @@ spec:
                     value: /home/runner/dox_customize
                   - name: PATH
                     value: /home/runner/.dox/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-                  - name: DOCKER_BUILDKIT
-                    value: "1"
-                  - name: BUILDKIT_HOST
-                    value: tcp://127.0.0.1:1234
                 volumeMounts:
+                  - name: dind-sock
+                    mountPath: /var/run
                   - name: dox-customize
                     mountPath: /home/runner/dox_customize
                   - name: dox-resources
@@ -73,26 +74,29 @@ spec:
                     subPath: trivy  
                   - name: dox-resources
                     mountPath: /home/runner/.cache
-                    subPath: cache
-                  - name: dox-resources
-                    mountPath: /var/lib/buildkit
-                    subPath: buildkit
-
-              - name: buildkitd
-                image: moby/buildkit:latest
-                args: ["--addr", "tcp://0.0.0.0:1234"]
+                    subPath: cache                     
+              - name: dind
+                image: docker:dind
+                args:
+                  - dockerd
+                  - --host=unix:///var/run/docker.sock
+                  - --group=$(DOCKER_GROUP_GID)
+                env:
+                  - name: DOCKER_GROUP_GID
+                    value: "123"
+                securityContext:
+                  privileged: true
                 volumeMounts:
-                  - name: dox-resources
-                    mountPath: /var/lib/buildkit
-                    subPath: buildkit
-
+                  - name: dind-sock
+                    mountPath: /var/run
             volumes:
+              - name: dind-sock
+                emptyDir: {}
               - name: dox-customize
                 emptyDir: {}
               - name: dox-resources
                 persistentVolumeClaim:
-                  claimName: dox-resources-pvc
-
+                  claimName: dox-resources-pvc                
   destination:
     server: https://kubernetes.default.svc
     namespace: dox-runners
