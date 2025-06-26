@@ -81,8 +81,6 @@ spec:
                   - dockerd
                   - --host=unix:///var/run/docker.sock
                   - --group=$(DOCKER_GROUP_GID)
-                  - --features
-                  - '{"buildkit": true}'
                 env:
                   - name: DOCKER_GROUP_GID
                     value: "123"
