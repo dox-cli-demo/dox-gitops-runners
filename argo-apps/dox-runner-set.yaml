@@ -76,7 +76,7 @@ spec:
                     mountPath: /home/runner/.cache
                     subPath: cache                     
               - name: dind
-                image: docker:28.3.3-dind
+                image: docker:dind
                 args:
                   - dockerd
                   - --host=unix:///var/run/docker.sock
